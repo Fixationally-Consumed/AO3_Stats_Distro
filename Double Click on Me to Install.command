@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 bash_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+cd ~
 cd "$bash_path"
 
 mv ./AO3_Stats ~
