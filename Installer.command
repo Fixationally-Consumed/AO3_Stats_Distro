@@ -8,6 +8,9 @@ cd "$bash_path"
 mkdir -p ~/AO3_Stats
 mkdir -p ~/AO3_Stats/Data
 
+# If the program already exists, delete it so that the new one can be installed
+rm -r ~/AO3_Stats/Program
+
 # Move the files
 mv ./Program ~/AO3_Stats
 mv ./AO3\ Stat\ Tracker.command ~/Desktop
