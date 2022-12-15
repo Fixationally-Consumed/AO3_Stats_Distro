@@ -9,7 +9,7 @@ def-env activate-virtualenv [] {
     }
 
     let is_windows = ((sys).host.name | str downcase) == 'windows'
-    let virtual_env = '/Users/robertgw/AO3_Stats/Program'
+    let virtual_env = '/Users/robertgw/Desktop/AO3_Stats_Distro/Program'
     let bin = 'bin'
     let path_sep = ':'
     let path_name = if $is_windows {
@@ -89,4 +89,4 @@ def-env activate-virtualenv [] {
 activate-virtualenv
 
 alias pydoc = python -m pydoc
-alias deactivate = source '/Users/robertgw/AO3_Stats/Program/bin/deactivate.nu'
+alias deactivate = source '/Users/robertgw/Desktop/AO3_Stats_Distro/Program/bin/deactivate.nu'

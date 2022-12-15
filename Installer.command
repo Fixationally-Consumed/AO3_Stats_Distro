@@ -22,3 +22,9 @@ chmod +x ~/AO3_Stats/Program/generate_graph.py
 chmod +x ~/AO3_Stats/Program/interact_with_cron.py
 chmod +x ~/AO3_Stats/Program/update_AO3_fics.py
 chmod +x ~/AO3_Stats/Program/user_interface.py
+
+# Install dependancies that were left out of the data transfer
+cd ~/AO3_Stats/Program
+source bin/activate
+pip install -r requirements.txt
+deactivate
