@@ -25,6 +25,17 @@ chmod +x ~/AO3_Stats/Program/update_AO3_fics.py
 chmod +x ~/AO3_Stats/Program/user_interface.py
 
 ## Prompt user to install python 3.8.2 on their machine, so that the virtual environment can be created
+echo "The installer is about to ask you to install python3.8.3"
+echo "If you don't already have python installed, this won't hurt anything."
+echo "If you do have python installed, I know that this is at least compatible"
+echo "with python3.8.3. If you have a later version, that'll probably work too."
+echo "You may want to decline the python installation that is about to happen and"
+echo "exit this installer (ctrl-c) if you're worried about having two python installations."
+echo "If you decline the upcoming download request, this installer will still try to work"
+echo "with your version of python (given it's python3)."
+echo " "
+echo "Press enter to continue"
+pause
 open ./python-3.8.3-macosx10.9.pkg
 
 ## Installing dependancies with python
@@ -36,6 +47,11 @@ pip install virtualenv
 
 # Create the virtual environment inside of the Project
 virtualenv --python="/usr/bin/python3.8.3" venv
+if [ ! -d "./venv" ]; then
+	# The virtual env doesn't exist, meaning that the user didn't install python3.8.3
+	echo "Installing virtual environment with the current python3 version..."
+	virtualenv --python="/usr/bin/python3" venv
+fi
 
 # Install dependancies that were left out of the data transfer
 source venv/bin/activate
