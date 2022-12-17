@@ -1,3 +1,0 @@
-Required ----------------
-Test everything (including installing on a new computer)
-	Make an installer program to move the files where you want to and update cron with a default time
