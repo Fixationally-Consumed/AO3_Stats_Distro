@@ -105,8 +105,8 @@ mkdir -p ~/AO3_Stats/Data
 rm -r ~/AO3_Stats/Program
 
 # Move the files
-mv ./Program ~/AO3_Stats
-mv ./AO3\ Stat\ Tracker.command ~/Desktop
+cp -r ./Program ~/AO3_Stats
+cp -r ./AO3\ Stat\ Tracker.command ~/Desktop
 
 # Give files permission
 chmod +x ~/Desktop/AO3\ Stat\ Tracker.command
@@ -116,19 +116,23 @@ chmod +x ~/AO3_Stats/Program/interact_with_cron.py
 chmod +x ~/AO3_Stats/Program/update_AO3_fics.py
 chmod +x ~/AO3_Stats/Program/user_interface.py
 
+echo "This is the end of the file movements"
+
 ## ----- Installing dependancies with python
 cd ~/AO3_Stats/Program
 
 # Install virtualenv if not installed
-pip install virtualenv
+python3 -m pip install virtualenv
 
 # Create the virtual environment inside of the Project
-virtualenv venv
+python3 -m virtualenv venv
 
 # Install dependancies that were left out of the data transfer
 source venv/bin/activate
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 deactivate
+
+echo "This is the end of the package installations"
 
 ## ----- If you made any changes to the file structure, fix it here
 # Such as changing where venv is, then crontab needs to be updated
