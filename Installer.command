@@ -122,7 +122,8 @@ echo "This is the end of the file movements"
 cd ~/AO3_Stats/Program
 
 # Install virtualenv if not installed
-python3 -m pip install virtualenv
+python3 -m pip install virtualenv # Installs under the user (not the root) I'm pretty sure
+# To uninstall virtualenv (under the user) use # pip3 uninstall virtualenv
 
 # Create the virtual environment inside of the Project
 python3 -m virtualenv venv
