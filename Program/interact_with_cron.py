@@ -8,7 +8,7 @@ from datetime import datetime
 import os
 
 # Constants --------
-PYTHON_EXE_PATH = os.path.join(cm.PROGRAM_DIRECTORY, 'bin/python3')
+PYTHON_EXE_PATH = os.path.join(cm.PROGRAM_DIRECTORY, 'venv/bin/python3')
 UPDATE_AO3_FICS_PATH = os.path.join(cm.PROGRAM_DIRECTORY, 'update_AO3_fics.py')
 AO3_cron_command = ' '.join([PYTHON_EXE_PATH, UPDATE_AO3_FICS_PATH])
 

@@ -24,7 +24,6 @@ def update_AO3_fics(fic_save_filepath):
             else:
                 # If there's an issue with the program, just skip this fic
                 print(f"Error with {fic['ficName']} on {datetime.date.today()}")
-                raise e
                 print(e)
                 continue
     return None

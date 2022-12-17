@@ -1,7 +1,20 @@
 #!/usr/bin/env bash
 
 PAUSE () {
-read  -n 8 -p "Type "continue" to move on: " throwAway; echo ""
+	read  -n 8 -p "Type "continue" to move on: " throwAway; echo ""
+}
+
+GET_PYTHON3_MINOR_VERSION () {
+pv=$(python3 --version)
+if [ -z "$pv" ]; then
+return $pv
+fi
+
+OLDIFS=$IFS
+IFS="$." tokens=( $pv )
+MINOR=${tokens[1]}
+IFS=$OLDIFS
+return $MINOR
 }
 
 ## ----- Prompt user to install python 3.8.3 on their machine, so that the virtual environment can be created
@@ -11,7 +24,7 @@ read  -n 8 -p "Type "continue" to move on: " throwAway; echo ""
 bash_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 cd "$bash_path"
 
-desired_python_verion=$"Python 3.8.3"
+GET_PYTHON3_MINOR_VERSION; PYTHON3_MINOR_VERSION=$?
 pv=$(python3 --version) # only checks for python3
 if [ -z "$pv" ]; then # Check if the string is empty, which means there's no python 3
 	curl -O "https://www.python.org/ftp/python/3.8.3/python-3.8.3-macosx10.9.pkg"
@@ -20,7 +33,7 @@ if [ -z "$pv" ]; then # Check if the string is empty, which means there's no pyt
 	echo "You don't have Python3 installed at all"
 	echo "Please install Python3"
 	PAUSE
-elif [ "$pv" = "$desired_python_verion" ]; then # if the python the user has is Python3.8.3
+elif [ "$pv" = "$desired_python_version" ]; then # if the python the user has is Python3.8.3
 	echo "Python 3.8.3 is already installed. Continuing on...";
 else # The user has python3, but it's not my version
 	echo "You have python3, but not the version the code was written with"
@@ -106,3 +119,6 @@ virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
 deactivate
+
+## ----- If you made any changes to the file structure, fix it here
+# Such as changing where venv is, then crontab needs to be updated
