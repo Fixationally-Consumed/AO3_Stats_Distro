@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+PAUSE () {
+read  -n 8 -p "Type "continue" to move on: " throwAway; echo ""
+}
+
 ## ----- Prompt user to install python 3.8.3 on their machine, so that the virtual environment can be created
 # Do this first, because if the user doesn't want to install python, now you don't have other things to clean up!
 
@@ -11,9 +15,11 @@ desired_python_verion=$"Python 3.8.3"
 pv=$(python3 --version) # only checks for python3
 if [ -z "$pv" ]; then # Check if the string is empty, which means there's no python 3
 	curl -O "https://www.python.org/ftp/python/3.8.3/python-3.8.3-macosx10.9.pkg"
+	open ./python-3.8.3-macosx10.9.pkg
+	echo ""
 	echo "You don't have Python3 installed at all"
 	echo "Please install Python3"
-	open ./python-3.8.3-macosx10.9.pkg
+	PAUSE
 elif [ "$pv" = "$desired_python_verion" ]; then # if the python the user has is Python3.8.3
 	echo "Python 3.8.3 is already installed. Continuing on...";
 else # The user has python3, but it's not my version
@@ -26,10 +32,10 @@ else # The user has python3, but it's not my version
 	echo "If you decline the upcoming download request, this installer will still continue on"
 	echo "with your current version of python."
 	echo " "
-	echo "Press enter to continue"
-	pause
+	PAUSE
 	curl -O "https://www.python.org/ftp/python/3.8.3/python-3.8.3-macosx10.9.pkg"
 	open ./python-3.8.3-macosx10.9.pkg
+	PAUSE
 fi
 
 # Check to make sure python was installed.
@@ -51,16 +57,15 @@ fi
 
 pv=$(python3 --version) # only checks for python3
 if [ -z "$pv" ]; then
+	echo ""
+	echo ""
 	echo "Hmm, it seems you chose to not download Python3."
-	echo "Or maybe you think this'll work on your version of Python2."
-	echo "Bold of you to assume my code is written that well."
-	echo "If you're really wanting to take a stab at it,"
-	echo "type Y (capitalized) and the installer will keep running."
-	echo "Otherwise, the installer will discontinue."
-	echo -n "Enter Y/n for Yes/no: "; read USER_INPUT
-	if [ ! $USER_INPUT = "Y" ]; then
-		exit 0
-	fi
+	echo "And I know for a fact that this program cannot run on Python2."
+	echo "You either didn't want to download Python, or you don't want to download Python3."
+	echo "Which, hey, that's cool! :)"
+	echo "Sooooo....."
+	echo "The installation will stop. Thank you for being interested!"
+	exit 0
 fi
 
 
