@@ -3,10 +3,15 @@
 ## ----- Prompt user to install python 3.8.3 on their machine, so that the virtual environment can be created
 # Do this first, because if the user doesn't want to install python, now you don't have other things to clean up!
 
+# cd to the current file's location
+bash_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+cd "$bash_path"
+
 desired_python_verion=$"Python 3.8.3"
 pv=$(python3 --version) # only checks for python3
 if [ -z "$pv" ]; then # Check if the string is empty, which means there's no python 3
-	echo "You dont have Python3 installed at all"
+	curl -O "https://www.python.org/ftp/python/3.8.3/python-3.8.3-macosx10.9.pkg"
+	echo "You don't have Python3 installed at all"
 	echo "Please install Python3"
 	open ./python-3.8.3-macosx10.9.pkg
 elif [ "$pv" = "$desired_python_verion" ]; then # if the python the user has is Python3.8.3
@@ -23,6 +28,7 @@ else # The user has python3, but it's not my version
 	echo " "
 	echo "Press enter to continue"
 	pause
+	curl -O "https://www.python.org/ftp/python/3.8.3/python-3.8.3-macosx10.9.pkg"
 	open ./python-3.8.3-macosx10.9.pkg
 fi
 
