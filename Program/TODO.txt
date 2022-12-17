@@ -1,8 +1,3 @@
 Required ----------------
 Test everything (including installing on a new computer)
 	Make an installer program to move the files where you want to and update cron with a default time
-
-
-
-Notes -------------------
-How to make program so that if you release updates it doesn't wipe the save files (just search for the data folder, and if it's there already then don't touch it)
