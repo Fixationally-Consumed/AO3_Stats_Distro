@@ -1,13 +1,19 @@
 #!/usr/bin/env bash
 
+## ----- Functions and constants
+
 PAUSE () {
 	read  -n 8 -p "Type "continue" to move on: " throwAway; echo ""
 }
 
 GET_PYTHON3_MINOR_VERSION () {
 pv=$(python3 --version)
-if [ -z "$pv" ]; then
-return $pv
+if [[ ${pv} != *"Python"* ]]; then # if pv doesn't contain "Python", meaning that the script returned an error code or an empty
+	WAS_PYTHON3_INSTALLED=$"False"
+	return $0
+	# I cannot figure out how to return a value within MINOR unless it's a number. So instead, I'm assigning the flag to a global variable
+else
+	WAS_PYTHON3_INSTALLED=$"True"
 fi
 
 OLDIFS=$IFS
@@ -17,6 +23,9 @@ IFS=$OLDIFS
 return $MINOR
 }
 
+PYTHON_DOWNLOAD=$"https://www.python.org/ftp/python/3.8.3/python-3.8.3-macosx10.9.pkg"
+PYTHON_INSTALLER=$"./python-3.8.3-macosx10.9.pkg"
+
 ## ----- Prompt user to install python 3.8.3 on their machine, so that the virtual environment can be created
 # Do this first, because if the user doesn't want to install python, now you don't have other things to clean up!
 
@@ -25,29 +34,29 @@ bash_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 cd "$bash_path"
 
 GET_PYTHON3_MINOR_VERSION; PYTHON3_MINOR_VERSION=$?
-pv=$(python3 --version) # only checks for python3
-if [ -z "$pv" ]; then # Check if the string is empty, which means there's no python 3
-	curl -O "https://www.python.org/ftp/python/3.8.3/python-3.8.3-macosx10.9.pkg"
-	open ./python-3.8.3-macosx10.9.pkg
+if [ $WAS_PYTHON3_INSTALLED = $"False" ]; then # Check if the flag is False, which means there's no python 3
+	curl -O $PYTHON_DOWNLOAD
+	open $PYTHON_INSTALLER
 	echo ""
 	echo "You don't have Python3 installed at all"
 	echo "Please install Python3"
 	PAUSE
-elif [ "$pv" = "$desired_python_version" ]; then # if the python the user has is Python3.8.3
-	echo "Python 3.8.3 is already installed. Continuing on...";
+elif [ "$PYTHON3_MINOR_VERSION" = "8" ]; then # if the python the user has is Python3.8
+	echo "Python 3.8 is already installed. Continuing on...";
 else # The user has python3, but it's not my version
-	echo "You have python3, but not the version the code was written with"
-	echo "The installer is about to ask you to install python3.8.3"
+	echo "You have python3, but not the version the code was written with."
+	echo "The installer is about to ask you to install python3.8.3."
 	echo "I know that this is at least compatible with with python3.8.3."
 	echo "If you have a later version, that'll probably work too."
 	echo "You may want to decline the python installation that is about to happen,"
 	echo "so you don't install multiple versions of python."
-	echo "If you decline the upcoming download request, this installer will still continue on"
-	echo "with your current version of python."
+	echo ""
+	echo "If you decline the upcoming download request (by simply closing out of it),"
+	echo "this installer will still try to continue on with your current version of python."
 	echo " "
 	PAUSE
-	curl -O "https://www.python.org/ftp/python/3.8.3/python-3.8.3-macosx10.9.pkg"
-	open ./python-3.8.3-macosx10.9.pkg
+	curl -O $PYTHON_DOWNLOAD
+	open $PYTHON_INSTALLER
 	PAUSE
 fi
 
@@ -57,7 +66,7 @@ fi
 #	2) The user didn't have python and installed Python 3.8.3
 #	3) The user didn't have python and instead installed another version
 #	4) The user already had Python 3.8.3
-#	5) The user already had another version of Python3
+#	5) The user already had another version of Python3 and didn't download Python3.8.3
 #	6) The user had a version of Python2 and wanted to stick with it
 # How to deal with these
 #	1) Cancel the install
@@ -68,11 +77,11 @@ fi
 #	6) Cancel the install
 # Checking again for if the user has python3 will handle all of the "Cancel the install" scenarios above
 
-pv=$(python3 --version) # only checks for python3
-if [ -z "$pv" ]; then
+GET_PYTHON3_MINOR_VERSION; PYTHON3_MINOR_VERSION=$?
+if [ $WAS_PYTHON3_INSTALLED = $"False" ]; then
 	echo ""
 	echo ""
-	echo "Hmm, it seems you chose to not download Python3."
+	echo "Hmm, it seems you chose to not download any version of Python3."
 	echo "And I know for a fact that this program cannot run on Python2."
 	echo "You either didn't want to download Python, or you don't want to download Python3."
 	echo "Which, hey, that's cool! :)"
@@ -81,6 +90,7 @@ if [ -z "$pv" ]; then
 	exit 0
 fi
 
+echo "This is the end of the Python installation"
 
 ## ----- Moving files from download
 # cd to the current file's location
