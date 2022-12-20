@@ -64,11 +64,13 @@ FIC_SAVE_DICRECTORY = DATA_DIRECTORY
 FIC_SAVE_FILENAME = 'AO3_fic_list_save_file.txt'
 FIC_SAVE_FILEPATH = os.path.join(FIC_SAVE_DICRECTORY, FIC_SAVE_FILENAME)
 
-GRAPH_FN_SUFFIX = ' - stats.png'
-HISTORY_FN_SUFFIX = '_workHistory.pickle'
-
-
 ## Functions -------------------
+def make_graph_filename(ficName):
+    return f"{ficName} - stats.png"
+
+def make_workHistory_filename(ficName, ID):
+    return f"{ficName}_{ID}_workHistory.pickle"
+
 def ensure_fic_save_file_exists(fic_save_filepath):
     fic_save_directory = os.path.dirname(fic_save_filepath)
     # Create the save folder if it doesn't already exist
@@ -93,7 +95,6 @@ def read_in(filepath):
         processed_split_raw_text.append(line)
     
     for line in processed_split_raw_text:
-        #workID, ficName, graphDirectory, workHistoryDirectory = line.split(SEP)
         workID, ficName, graphDirectory = line.split(SEP)
         """fic_obj.append({'workID':workID,
                     'ficName': ficName,
@@ -108,7 +109,6 @@ def write_out(fics_obj, filepath):
     if len(fics_obj) > 0:
         with open(filepath, 'w') as fh:
             for fic in fics_obj:
-                #line = SEP.join([fic['workID'], fic['ficName'], fic['graphDirectory'], fic['workHistoryDirectory']]) + '\n'
                 line = SEP.join([fic['workID'], fic['ficName'], fic['graphDirectory']]) + '\n'
                 fh.write(line)
     else:

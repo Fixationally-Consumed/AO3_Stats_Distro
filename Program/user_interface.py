@@ -22,10 +22,8 @@ def print_fics(fics):
     # Create a list of lists for the tabulate function
     data = list()
     for index, fic in enumerate(fics):
-        #data.append([str(index), fic['workID'], fic['ficName'], fic['graphDirectory'], fic['workHistoryDirectory']])
         data.append([str(index), fic['workID'], fic['ficName'], fic['graphDirectory']])
 
-    #print(tabulate(data, headers=['Index', 'Work ID', 'Fic Name', 'Graph Directory', 'Work History Directory']))
     print(tabulate(data, headers=['Index', 'Work ID', 'Fic Name', 'Graph Directory']))
     return None
 
@@ -172,70 +170,22 @@ def get_graphDirectory():
     cm.clear_screen()
     return directory
 
-"""
-def get_workHistoryDirectory():
-    # Returns the directory of where the user wants the work history stored
-    # Also adds on to the path a new folder where the save files will be kept
-    print('Would you like the folder containing the data file to be stored in your home folder (recommended)?')
-    if input('Type "Yes" or "No", then enter: \n').lower().startswith('y'):
-        directory = os.path.join(str(pathlib.Path.home()), cm.HISTORY_FOLDER_NAME)
-    elif input('\nWould you like the folder containing this data file to be stored in your documents folder?\nType "Yes" or "No" to continue, then enter: \n').lower().startswith('y'):
-        directory = os.path.join(str(pathlib.Path.home()),'Documents', cm.HISTORY_FOLDER_NAME)
-    else:
-        print('The program will make a save folder inside the directory/folder you specify.')
-        print('Enter the absolute path to the directory/folder where you want the data folder to be located.')
-        print('After typing the location, hit Enter.')
-        print('Hint: You can also drag and drop the folder in this window to paste the path.')
-        directory = input().replace('\\','') # Python does not need or use \ to denote spaces in directories
-        print('\n\n')
-        while not os.path.exists(directory):
-            cm.clear_screen()
-            print('That directory/folder does not exist. Please enter it again or try a new folder.')
-            print('\n')
-            print('The program will make a save folder inside the directory/folder you specify.')
-            print('Enter the absolute path to the directory/folder where you want the data folder to be located.')
-            print('After typing the location, hit Enter.')
-            print('Hint: You can also drag and drop the folder in this window to paste the path.')
-            print()
-            print('You can also enter a blank line and the program will default to the home folder')
-            directory = input().replace('\\','') # Python does not need or use \ to denote spaces in directories
-            print('\n\n')
-            if directory == '':
-                directory = str(pathlib.Path.home())
-                break
-        directory = os.path.join(directory, cm.HISTORY_FOLDER_NAME)
-    cm.clear_screen()
-    if not os.path.exists(directory):
-        os.mkdir(directory)
-    return directory
-"""
-
 def change_fic_save_files(old_fic, new_fic):
     # Changes the save locations and/or names of the save files
     #   If nothing has been changed, the function won't change anything.
     #   If the work ID is the only thing that changed, nothing gets updated.
     # Move/Rename graph
-    old_graph_filepath = os.path.join(old_fic['graphDirectory'], old_fic['ficName'] + cm.GRAPH_FN_SUFFIX)
-    new_graph_filepath = os.path.join(new_fic['graphDirectory'], new_fic['ficName'] + cm.GRAPH_FN_SUFFIX)
+    old_graph_filepath = os.path.join(old_fic['graphDirectory'], cm.make_graph_filename(old_fic['ficName']))
+    new_graph_filepath = os.path.join(new_fic['graphDirectory'], cm.make_graph_filename(new_fic['ficName']))
     if os.path.exists(old_graph_filepath):
         shutil.move(old_graph_filepath, new_graph_filepath)
 ##    else:
 ##        # The file hasn't actually been made yet and this is a fic list clerical change
 ##        # Nothing else needs to be done
-    """
-    # Move/Rename work history
-    old_history_filepath = os.path.join(old_fic['workHistoryDirectory'], old_fic['ficName'] + cm.HISTORY_FN_SUFFIX)
-    new_history_filepath = os.path.join(new_fic['workHistoryDirectory'], new_fic['ficName'] + cm.HISTORY_FN_SUFFIX)
-    if os.path.exists(old_history_filepath):
-        shutil.move(old_history_filepath, new_history_filepath)
-##    else:
-##        # The file hasn't actually been made yet and this is a fic list clerical change
-##        # Nothing else needs to be done"""
+
     # Update the name of the work history pickle file if the name changed
-    old_workHistory_filename = old_fic['ficName'] + f"_{old_fic['workID']}" + cm.HISTORY_FN_SUFFIX
-    old_workHistory_filepath = os.path.join(cm.DATA_DIRECTORY, old_workHistory_filename)
-    new_workHistory_filename = new_fic['ficName'] + f"_{new_fic['workID']}" + cm.HISTORY_FN_SUFFIX
-    new_workHistory_filepath = os.path.join(cm.DATA_DIRECTORY, new_workHistory_filename)
+    old_workHistory_filepath = os.path.join(cm.DATA_DIRECTORY, cm.make_workHistory_filename(old_fic['ficName'], old_fic['workID']))
+    new_workHistory_filepath = os.path.join(cm.DATA_DIRECTORY, cm.make_workHistory_filename(new_fic['ficName'], new_fic['workID']))
     if os.path.exists(old_workHistory_filepath):
         os.rename(old_workHistory_filepath, new_workHistory_filepath)
     return None
@@ -248,6 +198,8 @@ def change_fic_list(fics):
     
     while True:
         print_fics(fics)
+        print()
+        print('Changing a fic\'s info will NOT overwrite any of the data :)')
         print()
         print('Please type a command. After typing, hit Enter.')
         print('Change a row:                           Type the row number')
@@ -266,7 +218,6 @@ def change_fic_list(fics):
             print('Work ID: --------------- ' + fic['workID'])
             print('Fic Name: -------------- ' + fic['ficName'])
             print('Directory of Graph File: ' + fic['graphDirectory'])
-            #print('Directory of Data File:  ' + fic['workHistoryDirectory'])
             
             # Pull new fic data from user
             print()
@@ -276,19 +227,13 @@ def change_fic_list(fics):
             workID = get_workID(fics)
             ficName = get_ficName(fics)
             graphDirectory = get_graphDirectory()
-            #workHistoryDirectory = get_workHistoryDirectory()
             print('\n')
             print(f'Do you accept row {command} new values?')
             print('Work ID: --------------- ' + workID)
             print('Fic Name: -------------- ' + ficName)
             print('Directory of Graph File: ' + graphDirectory)
-            #print('Directory of Data File:  ' + workHistoryDirectory)
             print('Type "Yes" to accept and "No" to decline')
             if input().lower().startswith('y'):
-                """fic = {'workID': workID,
-                       'ficName': ficName,
-                       'graphDirectory': graphDirectory,
-                       'workHistoryDirectory': workHistoryDirectory}"""
                 fic = {'workID': workID,
                        'ficName': ficName,
                        'graphDirectory': graphDirectory}
@@ -329,19 +274,13 @@ def add_to_fic_list(fics):
             workID = get_workID(fics)
             ficName = get_ficName(fics)
             graphDirectory = get_graphDirectory()
-            #workHistoryDirectory = get_workHistoryDirectory()
             print('\n\n')
             print('Do you wish to add the following fic?')
             print('Work ID: --------------- ' + workID)
             print('Fic Name: -------------- ' + ficName)
             print('Directory of Graph File: ' + graphDirectory)
-            #print('Directory of Data File:  ' + workHistoryDirectory)
             print('Type "Yes" to accept and "No" to decline')
             if input().lower().startswith('y'):
-                """fics.append({'workID': workID,
-                             'ficName': ficName,
-                             'graphDirectory': graphDirectory,
-                             'workHistoryDirectory': workHistoryDirectory})"""
                 fics.append({'workID': workID,
                              'ficName': ficName,
                              'graphDirectory': graphDirectory})
@@ -364,6 +303,8 @@ def delete_from_fic_list(fics):
     
     while True:
         print_fics(fics)
+        print()
+        print('Deleting a fic will only stop it from being tracked. It\'s data will still be stored.')
         print()
         print('Please enter a command. After typing, hit Enter.')
         print('Delete a row:                           Type the row number')
@@ -398,24 +339,6 @@ def user_interface(save_filepath):
     cm.ensure_fic_save_file_exists(save_filepath) # Also creates the save folder if it doesn't exist
     fics = cm.read_in(save_filepath)
     cm.clear_screen()
-
-    """
-    # Check for missing directories and alert
-    missing_directories = list()
-    for fic in fics:
-        if not os.path.exists(fic['workHistoryDirectory']):
-            missing_directories.append(fic)
-    if len(missing_directories) > 0:
-        print_fics(missing_directories)
-        print()
-        print('The Folder/Directory for the above data save file(s) no longer exist.')
-        print('They may have been moved or deleted.')
-        print('Please do one of the following')
-        print('1) Replace the folder\n2) Move the folder back to it\'s original location')
-        print('3) Change the folder name to match what is shown above, or change the above to match to current folder name')
-        print('4) Remove the fic from the tracked fics using this program.')
-        print('\n\n')
-    """
     
     print('Hi!\n')
     while True:

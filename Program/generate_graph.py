@@ -41,11 +41,11 @@ def generate_graph(workID, ficName, graphDirectory, workHistoryDirectory):
     
     ## ----- Graph/Figure info
     plotTitle = f'"{ficName}" Data' # Title name of the plot
-    figureFileName = ficName + cm.GRAPH_FN_SUFFIX # Name of the figure, doesn't require file extension
+    figureFileName = cm.make_graph_filename(ficName) # Name of the figure, doesn't require file extension
     figureSavePath =  os.path.join(graphDirectory, figureFileName) # Where to save the graph
 
     ## ----- Data file info
-    workHistoryFileName = ficName + f"_{workID}" + cm.HISTORY_FN_SUFFIX
+    workHistoryFileName = cm.make_workHistory_filename(ficName, workID)
     workHistorySavePath = os.path.join(workHistoryDirectory, workHistoryFileName) # Where to save the data file for the work
 
     # Start script -----------------------------------------------------------------
@@ -138,22 +138,16 @@ def generate_graph(workID, ficName, graphDirectory, workHistoryDirectory):
     """
     for i, newChapterBool in enumerate(workHistory['chapter added']):
         if newChapterBool is True:
-            #shiftFactor = round(workHistory['hits'][i] * .005) # Lifts the value slightly upwards so it doesn't cover the line. Arbitrary, .005 can be changed.
-            shiftFactor = 0 # Set to zero to remove shifting errors. This doesn't really seem needed anymore.
             ax_hits.text(workHistory['days since published'][i], # x-value
-                         workHistory['hits'][i]+shiftFactor, # y-value
+                         workHistory['hits'][i], # y-value
                          workHistory['nchapters'][i], fontsize=14) # Text (chapter number)
             
-            #shiftFactor = round(workHistory['kudos'][i] * .005) # Lifts the value slightly upwards so it doesn't cover the line. Arbitrary, .005 can be changed.
-            shiftFactor = 0 # Set to zero to remove shifting errors. This doesn't really seem needed anymore.
             ax_kudos.text(workHistory['days since published'][i], # x-value
-                         workHistory['kudos'][i]+shiftFactor, # y-value
+                         workHistory['kudos'][i], # y-value
                          workHistory['nchapters'][i], fontsize=14) # Text (chapter number)
             
-            #shiftFactor = round(workHistory['ncomments'][i] * .005) # Lifts the value slightly upwards so it doesn't cover the line. Arbitrary, .005 can be changed.
-            shiftFactor = 0 # Set to zero to remove shifting errors. This doesn't really seem needed anymore.
             ax_ncomments.text(workHistory['days since published'][i], # x-value
-                              workHistory['ncomments'][i]+shiftFactor, # y-value
+                              workHistory['ncomments'][i], # y-value
                               workHistory['nchapters'][i], fontsize=14) # Text (chapter number)
 
     ## ----- Creating text box off to the side that displays extra info

@@ -12,7 +12,7 @@ def update_AO3_fics(fic_save_filepath):
     list_of_fics = cm.read_in(fic_save_filepath)
     for fic in list_of_fics:
         try:
-            # If cm.HISTORY_FOLDER_DIRECTORY does not exist, generate_graph will create a new file
+            # Note: If cm.HISTORY_FOLDER_DIRECTORY does not exist, generate_graph will create a new file
             print('Updating: ', fic['ficName'], '...')
             generate_graph(int(fic['workID']), fic['ficName'], fic['graphDirectory'], cm.HISTORY_FOLDER_DIRECTORY)
 

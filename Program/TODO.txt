@@ -1,3 +1,5 @@
-Turn the file name returns into functions. Standardize it!
+Remove the "warning" message! :D
 
-Removes extra lines of code that you've commented out
+When asking for the graph save directory, strip the blank space at the end of the file that's due to dragging in a folder. It's only a SINGLE blank space
+
+Update when the change function moves everything, because if they make changes and then decide not to change it, the files are already moved!
