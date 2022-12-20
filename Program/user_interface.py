@@ -257,9 +257,10 @@ def change_fic_list(fics, save_filepath):
             cm.clear_screen()
             print(f'\nThe command "{command}" is not recognized or not listed.')
             print('Please try typing it again.')
+            print()
     return None
 
-def add_to_fic_list(fics):
+def add_to_fic_list(fics, save_filepath):
     unchanged_fics = copy(fics)
     while True:
         print_fics(fics)
@@ -302,9 +303,10 @@ def add_to_fic_list(fics):
             cm.clear_screen()
             print(f'\nThe command {command} is not recognized.')
             print('Please enter another command.')
+            print()
     return None
 
-def delete_from_fic_list(fics):
+def delete_from_fic_list(fics, save_filepath):
     if len(fics) < 1:
         print('There are no fics to delete.')
         return fics
@@ -320,7 +322,7 @@ def delete_from_fic_list(fics):
         print('Save:                                   Type "Save"')
         print('Quit without saving deletions:          Type "Quit"')
         row = input()
-        if row.lower().startswith('r'): # Save the fic list
+        if row.lower().startswith('s'): # Save the fic list
             cm.write_out(fics, save_filepath)
             return fics
         elif row.lower().startswith('q'): # Quit without saving
@@ -341,6 +343,7 @@ def delete_from_fic_list(fics):
             cm.clear_screen()
             print(f'\nThe command "{row}" is not recognized or not listed.')
             print('Please try typing it again.')
+            print()
     return None
 
 def user_interface(save_filepath):
@@ -358,9 +361,10 @@ def user_interface(save_filepath):
         print('Remove a fic from tracking:          Type "Remove"')
         print('Change a fic in tracking:            Type "Change"')
         print('Adjust time fics are tracked:        Type "Time"')
-        print('Save and Update the fics right now:  Type "Update"')
         print('                   ~~~~~~~~~~             ')
+        print('Update the fics right now:           Type "Update"')
         print('Exit program:                        Type "Exit"')
+        print('                   ~~~~~~~~~~             ')
         
         user_action = input()
         if user_action.lower().startswith('v'): # View fics
