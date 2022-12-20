@@ -212,9 +212,10 @@ def change_fic_list(fics, save_filepath):
         print()
         print('Please type a command. After typing, hit Enter.')
         print('Change a row:                           Type the row number')
-        print('Return to home screen and Save:         Type "Return"')
+        print('Save and return to home screen:         Type "Save"')
         command = input()
-        if command.lower().startswith('r'):
+        if command.lower().startswith('s'):
+            cm.write_out(fics, save_filepath)
             return fics
         elif cm.isPosInt(command) and int(command) < len(fics):
             fic = fics.pop(int(command))
@@ -265,10 +266,11 @@ def add_to_fic_list(fics):
         print()
         print('Please type a command. After typing, hit Enter.')
         print('Add a fic:                              Type "Add"')
-        print('Return to home screen:                  Type "Return"')
+        print('Save:                                   Type "Save"')
         print('Quit without saving additions:          Type "Quit"')
         command = input()
-        if command.lower().startswith('r'):
+        if command.lower().startswith('s'):
+            cm.write_out(fics, save_filepath)
             return fics
         elif command.lower().startswith('q'):
             return unchanged_fics
@@ -315,10 +317,11 @@ def delete_from_fic_list(fics):
         print()
         print('Please enter a command. After typing, hit Enter.')
         print('Delete a row:                           Type the Index number')
-        print('Return to home screen:                  Type "Return"')
+        print('Save:                                   Type "Save"')
         print('Quit without saving deletions:          Type "Quit"')
         row = input()
         if row.lower().startswith('r'): # Save the fic list
+            cm.write_out(fics, save_filepath)
             return fics
         elif row.lower().startswith('q'): # Quit without saving
             return unchanged_fics
@@ -344,11 +347,11 @@ def user_interface(save_filepath):
     # Loop that allows the user to interact with and change the file commanding what fics are tracked.
     #   This will also move and/or rename the stat files if the user changes those in any way.
     cm.ensure_fic_save_file_exists(save_filepath) # Also creates the save folder if it doesn't exist
-    fics = cm.read_in(save_filepath)
     cm.clear_screen()
     
     print('Hi!\n')
     while True:
+        fics = cm.read_in(save_filepath)
         print('What would you like to do? After typing, hit Enter')
         print('View fics being tracked:             Type "View"')
         print('Add a fic to be tracked:             Type "Add"')
@@ -357,8 +360,8 @@ def user_interface(save_filepath):
         print('Adjust time fics are tracked:        Type "Time"')
         print('Save and Update the fics right now:  Type "Update"')
         print('                   ~~~~~~~~~~             ')
-        print('Save your changes and exit program:  Type "Save"')
-        print('Quit without saving all changes:     Type "Quit"')
+        print('Exit program:                        Type "Exit"')
+        
         user_action = input()
         if user_action.lower().startswith('v'): # View fics
             cm.clear_screen()
@@ -366,20 +369,18 @@ def user_interface(save_filepath):
             print()
         elif user_action.lower().startswith('a'): # Add a fic
             cm.clear_screen()
-            fics = add_to_fic_list(fics)
+            fics = add_to_fic_list(fics, save_filepath)
             cm.clear_screen()
         elif user_action.lower().startswith('r'): # Remove a fic
             cm.clear_screen()
-            fics = delete_from_fic_list(fics)
+            fics = delete_from_fic_list(fics, save_filepath)
             cm.clear_screen()
         elif user_action.lower().startswith('c'): # Change a fic
             cm.clear_screen()
             fics = change_fic_list(fics, save_filepath)
             cm.clear_screen()
-        elif user_action.lower().startswith('s'): # Save the changes and exit
+        elif user_action.lower().startswith('e'): # Save the changes and exit
             cm.write_out(fics, save_filepath)
-            return None
-        elif user_action.lower().startswith('q'): # Quit the program
             return None
         elif user_action.lower().startswith('u'): # Save and update the fics right now
             cm.write_out(fics, save_filepath)
@@ -396,13 +397,6 @@ def user_interface(save_filepath):
             print(f"Command not identified - '{user_action}'")
             print('Please re-enter your command')
     return None
-
-"""
-Which functions make changes outside of the master save
-change_fic_list
-interact_with_cron.interact_with_cron
-"""
-
 
 if __name__ == '__main__':
     user_interface(cm.FIC_SAVE_FILEPATH)

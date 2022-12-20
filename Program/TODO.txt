@@ -1,5 +1,0 @@
-Test get graph directory with drag and dropping the path
-
-test return function of add and remove fic list
-
-test the change function

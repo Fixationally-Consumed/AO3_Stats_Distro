@@ -101,7 +101,7 @@ def read_in(filepath):
                     'graphDirectory': graphDirectory})
     return fic_obj
 
-def write_out(fics_obj, filepath):
+def write_out(fics_obj, filepath, alterFicNumber=None):
     if len(fics_obj) > 0:
         with open(filepath, 'w') as fh:
             for fic in fics_obj:
