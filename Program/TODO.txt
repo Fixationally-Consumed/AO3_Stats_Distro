@@ -1,5 +1,5 @@
-Remove the "warning" message! :D
+Test get graph directory with drag and dropping the path
 
-When asking for the graph save directory, strip the blank space at the end of the file that's due to dragging in a folder. It's only a SINGLE blank space
+test return function of add and remove fic list
 
-Update when the change function moves everything, because if they make changes and then decide not to change it, the files are already moved!
+test the change function

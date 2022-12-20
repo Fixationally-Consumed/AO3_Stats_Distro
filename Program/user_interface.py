@@ -54,7 +54,6 @@ def get_workID(fics):
     print('For example, in the URL')
     print('https://archiveofourown.org/works/32751484/chapters/81257581')
     print('The work ID is 32751484.')
-    print("Note: If a 'Warning' pops up, ignore that. It's annoying and I can't get rid of it, but it's harmless.")
     while True:
         print('Please enter the work ID of the fic you want to track, or copy/paste the URL of the fic.\n')
         ID_or_URL = input().strip()
@@ -153,8 +152,18 @@ def get_graphDirectory():
         print('Enter the absolute path to the directory/folder where you want the graph to be located.')
         print('After typing the path, hit Enter.')
         print('Hint: You can also drag and drop the folder in this window to paste the path.')
+        print('You can also enter a blank line and the program will default to the Desktop')
         directory = input().replace('\\','') # Python does not need or use \ to denote spaces in directories
         while not os.path.exists(directory):
+            """When dragged and dropped in, the terminal adds a space at the end (annoying).
+            If the directory given doesn't exist (checked above)
+            then check to see if the same directory exists but with the space removed.
+            If so, use that directory instead. This removes the error of the possibility that
+            the user, for some reason, does have a directory with a space at the end."""
+            if len(directory) > 0 and directory[-1] == ' ' and os.path.exists(directory[:-1]):
+                directory = directory[:-1]
+                break
+            
             cm.clear_screen()
             print('That directory/folder does not exist. Please enter it again or try a new folder.')
             print('\n')
@@ -190,26 +199,23 @@ def change_fic_save_files(old_fic, new_fic):
         os.rename(old_workHistory_filepath, new_workHistory_filepath)
     return None
 
-def change_fic_list(fics):
+def change_fic_list(fics, save_filepath):
     if len(fics) < 1:
         print('There are no fics to change.')
         return fics
-    unchanged_fics = copy(fics)
     
     while True:
         print_fics(fics)
         print()
-        print('Changing a fic\'s info will NOT overwrite any of the data :)')
+        print('Warning: Any accepted changes made are saved immediately.')
+        print('If you make a change you don\'t want, just change it again!')
         print()
         print('Please type a command. After typing, hit Enter.')
         print('Change a row:                           Type the row number')
-        print('Save your changes and exit changing:    Type "Save"')
-        print('Quit without saving changes:            Type "Quit"')
+        print('Return to home screen and Save:         Type "Return"')
         command = input()
-        if command.lower().startswith('s'):
+        if command.lower().startswith('r'):
             return fics
-        elif command.lower().startswith('q'):
-            return unchanged_fics
         elif cm.isPosInt(command) and int(command) < len(fics):
             fic = fics.pop(int(command))
             unchanged_fic = copy(fic)
@@ -239,10 +245,11 @@ def change_fic_list(fics):
                        'graphDirectory': graphDirectory}
                 change_fic_save_files(unchanged_fic, fic)
                 fics.insert(int(command), fic)
+                cm.write_out(fics, save_filepath)
                 cm.clear_screen()
             else:
                 cm.clear_screen()
-                print('Okay, this will not be added.')
+                print(f'Okay, Index {command} will not be changed.')
                 print('If that was a mistake, please enter the information again.')
                 fics.insert(int(command), unchanged_fic)
         else:
@@ -258,10 +265,10 @@ def add_to_fic_list(fics):
         print()
         print('Please type a command. After typing, hit Enter.')
         print('Add a fic:                              Type "Add"')
-        print('Save your changes and exit addition:    Type "Save"')
+        print('Return to home screen:                  Type "Return"')
         print('Quit without saving additions:          Type "Quit"')
         command = input()
-        if command.lower().startswith('s'):
+        if command.lower().startswith('r'):
             return fics
         elif command.lower().startswith('q'):
             return unchanged_fics
@@ -307,11 +314,11 @@ def delete_from_fic_list(fics):
         print('Deleting a fic will only stop it from being tracked. It\'s data will still be stored.')
         print()
         print('Please enter a command. After typing, hit Enter.')
-        print('Delete a row:                           Type the row number')
-        print('Save your changes and exit deletion:    Type "Save"')
+        print('Delete a row:                           Type the Index number')
+        print('Return to home screen:                  Type "Return"')
         print('Quit without saving deletions:          Type "Quit"')
         row = input()
-        if row.lower().startswith('s'): # Save the fic list
+        if row.lower().startswith('r'): # Save the fic list
             return fics
         elif row.lower().startswith('q'): # Quit without saving
             return unchanged_fics
@@ -367,14 +374,14 @@ def user_interface(save_filepath):
             cm.clear_screen()
         elif user_action.lower().startswith('c'): # Change a fic
             cm.clear_screen()
-            fics = change_fic_list(fics)
+            fics = change_fic_list(fics, save_filepath)
             cm.clear_screen()
         elif user_action.lower().startswith('s'): # Save the changes and exit
             cm.write_out(fics, save_filepath)
             return None
         elif user_action.lower().startswith('q'): # Quit the program
             return None
-        elif user_action.lower().startswith('u'): # Update the fics right now
+        elif user_action.lower().startswith('u'): # Save and update the fics right now
             cm.write_out(fics, save_filepath)
             cm.clear_screen()
             print('Updating fics...')
@@ -389,6 +396,13 @@ def user_interface(save_filepath):
             print(f"Command not identified - '{user_action}'")
             print('Please re-enter your command')
     return None
+
+"""
+Which functions make changes outside of the master save
+change_fic_list
+interact_with_cron.interact_with_cron
+"""
+
 
 if __name__ == '__main__':
     user_interface(cm.FIC_SAVE_FILEPATH)

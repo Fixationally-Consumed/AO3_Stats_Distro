@@ -96,10 +96,6 @@ def read_in(filepath):
     
     for line in processed_split_raw_text:
         workID, ficName, graphDirectory = line.split(SEP)
-        """fic_obj.append({'workID':workID,
-                    'ficName': ficName,
-                    'graphDirectory': graphDirectory,
-                    'workHistoryDirectory': workHistoryDirectory})"""
         fic_obj.append({'workID':workID,
                     'ficName': ficName,
                     'graphDirectory': graphDirectory})

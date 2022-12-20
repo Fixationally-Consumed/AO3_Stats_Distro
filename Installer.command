@@ -143,6 +143,7 @@ mkdir -p ~/AO3_Stats/Data
 
 # If the program already exists, delete it so that the new one can be installed
 rm -r ~/AO3_Stats/Program
+rm ~/Desktop/AO3\ Stat\ Tracker.command
 
 # Move the files
 cp -r ./Program ~/AO3_Stats
