@@ -1,0 +1,3 @@
+Turn the file name returns into functions. Standardize it!
+
+Removes extra lines of code that you've commented out
