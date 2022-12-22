@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# Author: Fixationally_Consumed
 import common as cm
 import os
 import pickle

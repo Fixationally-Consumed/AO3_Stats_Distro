@@ -9,10 +9,18 @@ import pathlib
 import AO3
 from tabulate import tabulate
 import warnings
+import datetime
 # User Defined modules
 import common as cm
 import update_AO3_fics
 import interact_with_cron
+
+def days_since_last_update(filepath):
+    # Returns the number of days since modified. When this is the graph output, it's
+    #   the number of days since it was last tracked.
+    last_modified_time_stamp = datetime.datetime.fromtimestamp(pathlib.Path(filepath).stat().st_mtime)
+    modified_time = datetime.datetime.now() - last_modified_time_stamp
+    return modified_time.days
 
 def print_fics(fics):
     if len(fics) < 1:
@@ -22,9 +30,10 @@ def print_fics(fics):
     # Create a list of lists for the tabulate function
     data = list()
     for index, fic in enumerate(fics):
-        data.append([str(index), fic['workID'], fic['ficName'], fic['graphDirectory']])
+        filepath = os.path.join(cm.DATA_DIRECTORY, cm.make_workHistory_filename(fic['ficName'], fic['workID']))
+        data.append([str(index), fic['workID'], fic['ficName'], fic['graphDirectory'], days_since_last_update(filepath)])
 
-    print(tabulate(data, headers=['Index', 'Work ID', 'Fic Name', 'Graph Directory']))
+    print(tabulate(data, headers=['Index', 'Work ID', 'Fic Name', 'Graph Directory', 'Days Since Updated']))
     return None
 
 def is_valid_AO3_workID(workID):
@@ -360,7 +369,7 @@ def user_interface(save_filepath):
         print('Add a fic to be tracked:             Type "Add"')
         print('Remove a fic from tracking:          Type "Remove"')
         print('Change a fic in tracking:            Type "Change"')
-        print('Adjust time fics are tracked:        Type "Time"')
+        print('Adjust times fics are tracked:       Type "Time"')
         print('                   ~~~~~~~~~~             ')
         print('Update the fics right now:           Type "Update"')
         print('Exit program:                        Type "Exit"')
