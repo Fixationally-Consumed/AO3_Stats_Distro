@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+## Author: Fixationally_Consumed
 
 ## ----- Functions and constants
 
