@@ -1,0 +1,6 @@
+**/.DS_Store
+**/.DS_Store/
+**/__pycache__/
+*.pyc
+Program/venv/
+python-3.8.3-macosx10.9.pkg
